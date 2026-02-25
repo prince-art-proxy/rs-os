@@ -1,4 +1,3 @@
-// index.js
 (function () {
   const osState = {
     vfsFiles: [],

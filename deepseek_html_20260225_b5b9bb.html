@@ -1,0 +1,211 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royal Source OS</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="desktop" id="desktop">
+    <!-- Hand-painted style Yin-Yang symbol -->
+    <div class="yin-yang">
+      <div class="top-circle"></div>
+      <div class="bottom-circle"></div>
+      <div class="dot-white"></div>
+      <div class="dot-black"></div>
+      <div class="brush-noise"></div>
+    </div>
+    
+    <!-- Royal Source text -->
+    <div class="royal-text">ROYAL SOURCE<span>✦</span></div>
+    
+    <div class="desktop-icons" id="desktopIcons">
+      <div class="icon" data-name="This PC" data-app="files">
+        <div class="icon-inner" data-type="file"><span>💻</span></div>
+        <div class="icon-label">This PC</div>
+      </div>
+      <div class="icon" data-name="Recycle Bin" data-app="recycle">
+        <div class="icon-inner" data-type="file"><span>🗑️</span></div>
+        <div class="icon-label">Recycle Bin</div>
+      </div>
+      <div class="icon" data-name="Documents" data-app="files">
+        <div class="icon-inner" data-type="folder"><span>📁</span></div>
+        <div class="icon-label">Documents</div>
+      </div>
+      <div class="icon" data-name="Pictures" data-app="pictures">
+        <div class="icon-inner" data-type="folder"><span>🖼️</span></div>
+        <div class="icon-label">Pictures</div>
+      </div>
+      <div class="icon" data-name="Web Browser" data-app="browser">
+        <div class="icon-inner" data-type="browser"><span>🌐</span></div>
+        <div class="icon-label">Web Browser</div>
+      </div>
+      <div class="icon" data-name="Chat" data-app="chat">
+        <div class="icon-inner" data-type="chat"><span>💬</span></div>
+        <div class="icon-label">Chat</div>
+      </div>
+      <div class="icon" data-name="Notepad" data-app="notepad">
+        <div class="icon-inner" data-type="file"><span>📝</span></div>
+        <div class="icon-label">Notepad</div>
+      </div>
+      <div class="icon" data-name="Settings" data-app="settings">
+        <div class="icon-inner" data-type="file"><span>⚙️</span></div>
+        <div class="icon-label">Settings</div>
+      </div>
+      <div class="icon" data-name="Calculator" data-app="calculator">
+        <div class="icon-inner" data-type="file"><span>🧮</span></div>
+        <div class="icon-label">Calculator</div>
+      </div>
+      <div class="icon" data-name="Music Player" data-app="music">
+        <div class="icon-inner" data-type="file"><span>🎵</span></div>
+        <div class="icon-label">Music Player</div>
+      </div>
+      <div class="icon" data-name="To-do" data-app="todo">
+        <div class="icon-inner" data-type="file"><span>✅</span></div>
+        <div class="icon-label">To-do</div>
+      </div>
+      <div class="icon" data-name="About" data-app="about">
+        <div class="icon-inner" data-type="file"><span>ℹ️</span></div>
+        <div class="icon-label">About</div>
+      </div>
+      <div class="icon" data-name="Command Prompt" data-app="cmd">
+        <div class="icon-inner" data-type="file"><span>💻</span></div>
+        <div class="icon-label">Command Prompt</div>
+      </div>
+    </div>
+
+    <!-- START MENU -->
+    <div class="start-menu" id="startMenu">
+      <div class="start-menu-header">Pinned</div>
+      <div class="start-menu-grid">
+        <button class="start-menu-app" data-app="browser">
+          <div class="start-menu-app-icon"><span>🌐</span></div>
+          <div class="start-menu-app-label">Browser</div>
+        </button>
+        <button class="start-menu-app" data-app="files">
+          <div class="start-menu-app-icon"><span>📁</span></div>
+          <div class="start-menu-app-label">File Explorer</div>
+        </button>
+        <button class="start-menu-app" data-app="chat">
+          <div class="start-menu-app-icon"><span>💬</span></div>
+          <div class="start-menu-app-label">Chat</div>
+        </button>
+        <button class="start-menu-app" data-app="notepad">
+          <div class="start-menu-app-icon"><span>📝</span></div>
+          <div class="start-menu-app-label">Notepad</div>
+        </button>
+        <button class="start-menu-app" data-app="pictures">
+          <div class="start-menu-app-icon"><span>🖼️</span></div>
+          <div class="start-menu-app-label">Pictures</div>
+        </button>
+        <button class="start-menu-app" data-app="recycle">
+          <div class="start-menu-app-icon"><span>🗑️</span></div>
+          <div class="start-menu-app-label">Recycle Bin</div>
+        </button>
+        <button class="start-menu-app" data-app="settings">
+          <div class="start-menu-app-icon"><span>⚙️</span></div>
+          <div class="start-menu-app-label">Settings</div>
+        </button>
+        <button class="start-menu-app" data-app="calculator">
+          <div class="start-menu-app-icon"><span>🧮</span></div>
+          <div class="start-menu-app-label">Calculator</div>
+        </button>
+        <button class="start-menu-app" data-app="music">
+          <div class="start-menu-app-icon"><span>🎵</span></div>
+          <div class="start-menu-app-label">Music Player</div>
+        </button>
+        <button class="start-menu-app" data-app="todo">
+          <div class="start-menu-app-icon"><span>✅</span></div>
+          <div class="start-menu-app-label">To-do</div>
+        </button>
+        <button class="start-menu-app" data-app="about">
+          <div class="start-menu-app-icon"><span>ℹ️</span></div>
+          <div class="start-menu-app-label">About</div>
+        </button>
+        <button class="start-menu-app" data-app="cmd">
+          <div class="start-menu-app-icon"><span>💻</span></div>
+          <div class="start-menu-app-label">Command Prompt</div>
+        </button>
+      </div>
+
+      <div class="start-menu-section-title">Recommended</div>
+      <div class="start-menu-recents"></div>
+
+      <div class="start-menu-footer">
+        <div class="start-menu-user">
+          <div class="start-menu-user-avatar">🙂</div>
+          <span>User</span>
+        </div>
+        <div class="start-menu-power"><span>⏻</span><span>Power</span></div>
+      </div>
+    </div>
+
+    <!-- TASKBAR -->
+    <div class="taskbar">
+      <div class="taskbar-left"></div>
+
+      <div class="taskbar-center">
+        <div class="taskbar-pins">
+          <div
+            class="taskbar-app taskbar-start-btn"
+            data-app="start"
+            title="Start"
+          >
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div
+            class="taskbar-app"
+            data-app="browser"
+            data-pinned="true"
+            title="Browser"
+          >
+            <span>🌐</span>
+          </div>
+          <div
+            class="taskbar-app"
+            data-app="chat"
+            data-pinned="true"
+            title="Chat"
+          >
+            <span>💬</span>
+          </div>
+          <div
+            class="taskbar-app"
+            data-app="files"
+            data-pinned="true"
+            title="File Explorer"
+          >
+            <span>📁</span>
+          </div>
+          <div
+            class="taskbar-app"
+            data-pinned="true"
+            data-app="settings"
+            title="Settings"
+          >
+            <span>⚙️</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="taskbar-tray">
+        <div class="tray-clock">
+          <div class="tray-clock-time" id="trayTime">--:-- --</div>
+          <div class="tray-clock-date" id="trayDate">--/--/----</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="selection-box"></div>
+  </div>
+
+  <!-- global context menu -->
+  <div id="contextMenu" class="context-menu"></div>
+
+  <script src="index.js"></script>
+</body>
+</html>

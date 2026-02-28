@@ -18,7 +18,7 @@
       wallpaperMode: "default",
       wallpaperUrl: "",
       wallpaperVfsId: null,
-      homepage: "https://8xy7zj-8080.csb.app",
+      homepage: "https://3hfkql-8080.csb.app",
     },
   };
 
@@ -109,7 +109,7 @@
   function ensureBrowserDefaults() {
     if (!osState.browserTabs.length) {
       const id = "tab-" + Date.now();
-      const home = osState.settings.homepage || "https://8xy7zj-8080.csb.app";
+      const home = osState.settings.homepage || "https://3hfkql-8080.csb.app";
       const url = home;
       osState.browserTabs.push({
         id,

@@ -18,7 +18,7 @@
       wallpaperMode: "default",
       wallpaperUrl: "",
       wallpaperVfsId: null,
-      homepage: "https://3hfkql-8080.csb.app",
+      homepage: "https://htjlqg-8080.csb.app",
     },
   };
 
@@ -1152,7 +1152,7 @@
             Date.now() +
             "-" +
             Math.random().toString(16).slice(2);
-          const home = osState.settings.homepage || "https://8xy7zj-8080.csb.app";
+          const home = osState.settings.homepage || "https://htjlqg-8080.csb.app";
           const tab = {
             id,
             title: "New Tab",

@@ -18,7 +18,7 @@
       wallpaperMode: "default",
       wallpaperUrl: "",
       wallpaperVfsId: null,
-      homepage: "https://htjlqg-8080.csb.app",
+      homepage: "proxy",
     },
   };
 
@@ -109,7 +109,7 @@
   function ensureBrowserDefaults() {
     if (!osState.browserTabs.length) {
       const id = "tab-" + Date.now();
-      const home = osState.settings.homepage || "https://3hfkql-8080.csb.app";
+      const home = osState.settings.homepage || "proxy";
       const url = home;
       osState.browserTabs.push({
         id,
@@ -1152,7 +1152,7 @@
             Date.now() +
             "-" +
             Math.random().toString(16).slice(2);
-          const home = osState.settings.homepage || "https://htjlqg-8080.csb.app";
+          const home = osState.settings.homepage || "proxy;
           const tab = {
             id,
             title: "New Tab",

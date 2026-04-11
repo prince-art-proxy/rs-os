@@ -1152,7 +1152,7 @@
             Date.now() +
             "-" +
             Math.random().toString(16).slice(2);
-          const home = osState.settings.homepage || "proxy;
+          const home = osState.settings.homepage || "proxy";
           const tab = {
             id,
             title: "New Tab",

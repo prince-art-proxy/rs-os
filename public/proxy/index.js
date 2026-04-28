@@ -24,15 +24,15 @@ const { ScramjetController } = $scramjetLoadController();
 
 const scramjet = new ScramjetController({
 	files: {
-		wasm: '/scram/scramjet.wasm.wasm',
-		all: '/scram/scramjet.all.js',
-		sync: '/scram/scramjet.sync.js',
+		wasm: '/proxy/scram/scramjet.wasm.wasm',
+		all: '/proxy/scram/scramjet.all.js',
+		sync: '/proxy/scram/scramjet.sync.js',
 	},
 });
 
 scramjet.init();
 
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+const connection = new BareMux.BareMuxConnection("/proxy/baremux/index.js");
 
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
@@ -52,8 +52,8 @@ form.addEventListener("submit", async (event) => {
 		"://" +
 		location.host +
 		"/wisp/";
-	if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-		await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+	if ((await connection.getTransport()) !== "/proxy/epoxy/index.mjs") {
+		await connection.setTransport("/proxy/epoxy/index.mjs", [{ wisp: wispUrl }]);
 	}
   const frame = scramjet.createFrame();
   frame.frame.id = "sj-frame";

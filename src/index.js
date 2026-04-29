@@ -40,6 +40,10 @@ fastify.register(fastifyStatic, {
 	decorateReply: true,
 });
 
+fastify.get("/proxy/scram/scramjet.all.js", (req, res) => {
+	return res.sendFile("proxy/scram/scramjet.all.js", publicPath);
+});
+
 fastify.register(fastifyStatic, {
   root: scramjetPath,
   prefix: "/proxy/scram/",
@@ -61,6 +65,7 @@ fastify.register(fastifyStatic, {
 fastify.setNotFoundHandler((res, reply) => {
 	return reply.code(404).type('text/html').sendFile('404.html');
 })
+
 
 fastify.server.on("listening", () => {
 	const address = fastify.server.address();

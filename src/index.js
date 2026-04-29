@@ -42,19 +42,19 @@ fastify.register(fastifyStatic, {
 
 fastify.register(fastifyStatic, {
   root: scramjetPath,
-  prefix: "/scram/",
+  prefix: "/proxy/scram/",
   decorateReply: false,
 });
 
 fastify.register(fastifyStatic, {
 	root: epoxyPath,
-	prefix: "/epoxy/",
+	prefix: "/proxy/epoxy/",
 	decorateReply: false,
 });
 
 fastify.register(fastifyStatic, {
 	root: baremuxPath,
-	prefix: "/baremux/",
+	prefix: "/proxy/baremux/",
 	decorateReply: false,
 });
 

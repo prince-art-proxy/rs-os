@@ -18,7 +18,7 @@
       wallpaperMode: "default",
       wallpaperUrl: "",
       wallpaperVfsId: null,
-      homepage: "/public/proxy/",
+      homepage: "/proxy/",
     },
   };
 
@@ -90,7 +90,7 @@
       )
         osState.settings.wallpaperVfsId = null;
       if (!osState.settings.homepage)
-        osState.settings.homepage = "/public/proxy/";
+        osState.settings.homepage = "/proxy/";
     }
 
     const accentKey = osState.settings.accent || "blue";
@@ -109,7 +109,7 @@
   function ensureBrowserDefaults() {
     if (!osState.browserTabs.length) {
       const id = "tab-" + Date.now();
-      const home = osState.settings.homepage || "/public/proxy/";
+      const home = osState.settings.homepage || "/proxy/";
       const url = home;
       osState.browserTabs.push({
         id,
@@ -1152,7 +1152,7 @@
             Date.now() +
             "-" +
             Math.random().toString(16).slice(2);
-          const home = osState.settings.homepage || "/public/proxy/";
+          const home = osState.settings.homepage || "/proxy/";
           const tab = {
             id,
             title: "New Tab",

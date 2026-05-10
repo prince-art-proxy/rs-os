@@ -3070,7 +3070,7 @@
               },
               r = t(
                 {
-                  prefix: "/scramjet/",
+                  prefix: "/proxy/scramjet/",
                   globals: {
                     wrapfn: "$scramjet$wrap",
                     wrappropertybase: "$scramjet__",

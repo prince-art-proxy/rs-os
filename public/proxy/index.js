@@ -52,9 +52,9 @@ form.addEventListener("submit", async (event) => {
 		"://" +
 		location.host +
 		"/wisp/";
-	if ((await connection.getTransport()) !== "/proxy/epoxy/index.mjs") {
-		await connection.setTransport("/proxy/epoxy/index.mjs", [{ wisp: wispUrl }]);
-	}
+	if ((await connection.getTransport()) !== "/proxy/libcurl/index.mjs") {
+    await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
+}
   const frame = scramjet.createFrame();
   frame.frame.id = "sj-frame";
 	document.body.appendChild(frame.frame);	

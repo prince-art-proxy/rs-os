@@ -102,8 +102,8 @@ form.addEventListener("submit", async (event) => {
 		const currentTransport = await connection.getTransport();
 		console.log('Current transport:', currentTransport);
 		
-		if (currentTransport !== "/proxy/libcurl/index.mjs") {
-			await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
+		if (currentTransport !== "/proxy/libcurl/dist/index.mjs") {
+			await connection.setTransport("/proxy/libcurl/dist/index.mjs", [{ wisp: wispUrl }]);
 			console.log('Transport set to libcurl with wisp:', wispUrl);
 		}
 	} catch (err) {

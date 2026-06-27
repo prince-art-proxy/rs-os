@@ -47,11 +47,7 @@ form.addEventListener("submit", async (event) => {
 
 	const url = search(address.value, searchEngine.value);
 
-	let wispUrl =
-		(location.protocol === "https:" ? "wss" : "ws") +
-		"://" +
-		location.host +
-		"/wisp/";
+	let wispUrl = "wss://gointospace.app/wisp/";
 	if ((await connection.getTransport()) !== "/proxy/libcurl/index.mjs") {
     await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
 }

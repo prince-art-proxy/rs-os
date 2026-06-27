@@ -15,7 +15,6 @@
         <script src="/proxy/baremux/index.js" defer></script>
         <script src="/proxy/register-sw.js" defer></script>
         <script src="/proxy/search.js" defer></script>
-        <script src="/proxy/index.js" defer></script>
 
         <script src="particles.js"></script>
 
@@ -66,12 +65,6 @@
         
         <script>
             "use strict";
-            const form = document.getElementById("sj-form");
-            const address = document.getElementById("sj-address");
-            const searchEngine = document.getElementById("sj-search-engine");
-            const error = document.getElementById("sj-error");
-            const errorCode = document.getElementById("sj-error-code");
-
             let connection;
 
             async function initBareMux() {
@@ -96,8 +89,10 @@
                     connection = new BareMux.BareMuxConnection("/proxy/baremux/worker.js");
                     console.log('BareMux initialized successfully');
                 } catch (err) {
-                    error.textContent = "Failed to initialize BareMux.";
-                    errorCode.textContent = err.toString();
+                    const error = document.getElementById("sj-error");
+                    const errorCode = document.getElementById("sj-error-code");
+                    if (error) error.textContent = "Failed to initialize BareMux.";
+                    if (errorCode) errorCode.textContent = err.toString();
                     console.error('BareMux init error:', err);
                 }
             }
@@ -105,79 +100,91 @@
             window.addEventListener('DOMContentLoaded', async () => {
                 try {
                     await initBareMux();
+                    
+                    const form = document.getElementById("sj-form");
+                    const address = document.getElementById("sj-address");
+                    const searchEngine = document.getElementById("sj-search-engine");
+                    const error = document.getElementById("sj-error");
+                    const errorCode = document.getElementById("sj-error-code");
+
+                    if (!form) {
+                        console.error('Form not found');
+                        return;
+                    }
+
+                    form.addEventListener("submit", async (event) => {
+                        event.preventDefault();
+
+                        if (!connection) {
+                            error.textContent = "System not initialized yet. Please wait...";
+                            return;
+                        }
+
+                        try {
+                            if (typeof registerSW !== 'undefined') {
+                                await registerSW();
+                            }
+                        } catch (err) {
+                            error.textContent = "Failed to register service worker.";
+                            errorCode.textContent = err.toString();
+                            console.error('SW registration error:', err);
+                            return;
+                        }
+
+                        let url;
+                        try {
+                            if (typeof search !== 'undefined') {
+                                url = search(address.value, searchEngine.value);
+                            } else {
+                                url = address.value.includes('.') ? 
+                                    (address.value.startsWith('http') ? address.value : 'https://' + address.value) :
+                                    searchEngine.value.replace('%s', encodeURIComponent(address.value));
+                            }
+                        } catch (err) {
+                            error.textContent = "Failed to process search query.";
+                            errorCode.textContent = err.toString();
+                            return;
+                        }
+
+                        let wispUrl = "wss://gointospace.app/wisp/";
+                        
+                        try {
+                            const currentTransport = await connection.getTransport();
+                            console.log('Current transport:', currentTransport);
+                            
+                            if (currentTransport !== "/proxy/libcurl/index.mjs") {
+                                await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
+                                console.log('Transport set to libcurl with wisp:', wispUrl);
+                            }
+                        } catch (err) {
+                            error.textContent = "Failed to set transport.";
+                            errorCode.textContent = err.toString();
+                            console.error('Transport error:', err);
+                            return;
+                        }
+
+                        try {
+                            const newWindow = window.open();
+                            if (newWindow) {
+                                connection.send(url).then(response => {
+                                    newWindow.location.href = url;
+                                }).catch(err => {
+                                    console.error('BareMux navigation error:', err);
+                                    newWindow.location.href = url;
+                                });
+                            } else {
+                                window.location.href = url;
+                            }
+                        } catch (err) {
+                            error.textContent = "Failed to navigate.";
+                            errorCode.textContent = err.toString();
+                            console.error('Navigation error:', err);
+                        }
+                    });
+                    
                     console.log('All systems initialized');
                 } catch (err) {
                     console.error('Initialization failed:', err);
-                }
-            });
-
-            form.addEventListener("submit", async (event) => {
-                event.preventDefault();
-
-                if (!connection) {
-                    error.textContent = "System not initialized yet. Please wait...";
-                    return;
-                }
-
-                try {
-                    if (typeof registerSW !== 'undefined') {
-                        await registerSW();
-                    }
-                } catch (err) {
-                    error.textContent = "Failed to register service worker.";
-                    errorCode.textContent = err.toString();
-                    console.error('SW registration error:', err);
-                    return;
-                }
-
-                let url;
-                try {
-                    if (typeof search !== 'undefined') {
-                        url = search(address.value, searchEngine.value);
-                    } else {
-                        url = address.value.includes('.') ? 
-                            (address.value.startsWith('http') ? address.value : 'https://' + address.value) :
-                            searchEngine.value.replace('%s', encodeURIComponent(address.value));
-                    }
-                } catch (err) {
-                    error.textContent = "Failed to process search query.";
-                    errorCode.textContent = err.toString();
-                    return;
-                }
-
-                let wispUrl = "wss://gointospace.app/wisp/";
-                
-                try {
-                    const currentTransport = await connection.getTransport();
-                    console.log('Current transport:', currentTransport);
-                    
-                    if (currentTransport !== "/proxy/libcurl/index.mjs") {
-                        await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
-                        console.log('Transport set to libcurl with wisp:', wispUrl);
-                    }
-                } catch (err) {
-                    error.textContent = "Failed to set transport.";
-                    errorCode.textContent = err.toString();
-                    console.error('Transport error:', err);
-                    return;
-                }
-
-                try {
-                    const newWindow = window.open();
-                    if (newWindow) {
-                        connection.send(url).then(response => {
-                            newWindow.location.href = url;
-                        }).catch(err => {
-                            console.error('BareMux navigation error:', err);
-                            newWindow.location.href = url;
-                        });
-                    } else {
-                        window.location.href = url;
-                    }
-                } catch (err) {
-                    error.textContent = "Failed to navigate.";
-                    errorCode.textContent = err.toString();
-                    console.error('Navigation error:', err);
                 }
             });
         </script>

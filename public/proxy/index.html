@@ -12,18 +12,13 @@
 
         <link rel="stylesheet" href="index.css" />
 
-        <!-- your scripts -->
-        <script src="/proxy/scram/scramjet.all.js"></script>
         <script src="/proxy/baremux/index.js" defer></script>
-       <!-- <script src="/proxy/epoxy/index.mjs" defer></script> -->
         <script src="/proxy/register-sw.js" defer></script>
         <script src="/proxy/search.js" defer></script>
         <script src="/proxy/index.js" defer></script>
 
-        <!-- ⭐ particles.js library -->
         <script src="particles.js"></script>
 
-        <!-- ⭐ particles.js config (NEON WHITE) -->
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 particlesJS("particles-js", {
@@ -68,11 +63,128 @@
                 });
             });
         </script>
+        
+        <script>
+            "use strict";
+            const form = document.getElementById("sj-form");
+            const address = document.getElementById("sj-address");
+            const searchEngine = document.getElementById("sj-search-engine");
+            const error = document.getElementById("sj-error");
+            const errorCode = document.getElementById("sj-error-code");
+
+            let connection;
+
+            async function initBareMux() {
+                try {
+                    if (typeof BareMux === 'undefined') {
+                        await new Promise((resolve, reject) => {
+                            let attempts = 0;
+                            const checkInterval = setInterval(() => {
+                                if (typeof BareMux !== 'undefined') {
+                                    clearInterval(checkInterval);
+                                    resolve();
+                                }
+                                attempts++;
+                                if (attempts > 50) {
+                                    clearInterval(checkInterval);
+                                    reject(new Error('BareMux failed to load'));
+                                }
+                            }, 100);
+                        });
+                    }
+
+                    connection = new BareMux.BareMuxConnection("/proxy/baremux/worker.js");
+                    console.log('BareMux initialized successfully');
+                } catch (err) {
+                    error.textContent = "Failed to initialize BareMux.";
+                    errorCode.textContent = err.toString();
+                    console.error('BareMux init error:', err);
+                }
+            }
+
+            window.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    await initBareMux();
+                    console.log('All systems initialized');
+                } catch (err) {
+                    console.error('Initialization failed:', err);
+                }
+            });
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                if (!connection) {
+                    error.textContent = "System not initialized yet. Please wait...";
+                    return;
+                }
+
+                try {
+                    if (typeof registerSW !== 'undefined') {
+                        await registerSW();
+                    }
+                } catch (err) {
+                    error.textContent = "Failed to register service worker.";
+                    errorCode.textContent = err.toString();
+                    console.error('SW registration error:', err);
+                    return;
+                }
+
+                let url;
+                try {
+                    if (typeof search !== 'undefined') {
+                        url = search(address.value, searchEngine.value);
+                    } else {
+                        url = address.value.includes('.') ? 
+                            (address.value.startsWith('http') ? address.value : 'https://' + address.value) :
+                            searchEngine.value.replace('%s', encodeURIComponent(address.value));
+                    }
+                } catch (err) {
+                    error.textContent = "Failed to process search query.";
+                    errorCode.textContent = err.toString();
+                    return;
+                }
+
+                let wispUrl = "wss://gointospace.app/wisp/";
+                
+                try {
+                    const currentTransport = await connection.getTransport();
+                    console.log('Current transport:', currentTransport);
+                    
+                    if (currentTransport !== "/proxy/libcurl/index.mjs") {
+                        await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
+                        console.log('Transport set to libcurl with wisp:', wispUrl);
+                    }
+                } catch (err) {
+                    error.textContent = "Failed to set transport.";
+                    errorCode.textContent = err.toString();
+                    console.error('Transport error:', err);
+                    return;
+                }
+
+                try {
+                    const newWindow = window.open();
+                    if (newWindow) {
+                        connection.send(url).then(response => {
+                            newWindow.location.href = url;
+                        }).catch(err => {
+                            console.error('BareMux navigation error:', err);
+                            newWindow.location.href = url;
+                        });
+                    } else {
+                        window.location.href = url;
+                    }
+                } catch (err) {
+                    error.textContent = "Failed to navigate.";
+                    errorCode.textContent = err.toString();
+                    console.error('Navigation error:', err);
+                }
+            });
+        </script>
     </head>
 
     <body>
 
-        <!-- ⭐ particles.js background container -->
         <div id="particles-js"></div>
 
         <div

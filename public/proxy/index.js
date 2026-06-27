@@ -20,48 +20,7 @@ const error = document.getElementById("sj-error");
  */
 const errorCode = document.getElementById("sj-error-code");
 
-let scramjet;
 let connection;
-
-async function initScramjet() {
-	try {
-		// Wait for scramjet to be fully loaded
-		if (typeof $scramjetLoadController === 'undefined') {
-			// If not loaded yet, wait a bit and try again
-			await new Promise((resolve, reject) => {
-				let attempts = 0;
-				const checkInterval = setInterval(() => {
-					if (typeof $scramjetLoadController !== 'undefined') {
-						clearInterval(checkInterval);
-						resolve();
-					}
-					attempts++;
-					if (attempts > 50) { // 5 seconds timeout
-						clearInterval(checkInterval);
-						reject(new Error('Scramjet failed to load'));
-					}
-				}, 100);
-			});
-		}
-
-		const { ScramjetController } = $scramjetLoadController();
-
-		scramjet = new ScramjetController({
-			files: {
-				wasm: '/proxy/scram/scramjet.wasm.wasm',
-				all: '/proxy/scram/scramjet.all.js',
-				sync: '/proxy/scram/scramjet.sync.js',
-			},
-		});
-
-		await scramjet.init();
-		console.log('Scramjet initialized successfully');
-	} catch (err) {
-		error.textContent = "Failed to initialize Scramjet.";
-		errorCode.textContent = err.toString();
-		console.error('Scramjet init error:', err);
-	}
-}
 
 async function initBareMux() {
 	try {
@@ -92,10 +51,10 @@ async function initBareMux() {
 	}
 }
 
-// Initialize everything when the page loads
+// Initialize when the page loads
 window.addEventListener('DOMContentLoaded', async () => {
 	try {
-		await Promise.all([initScramjet(), initBareMux()]);
+		await initBareMux();
 		console.log('All systems initialized');
 	} catch (err) {
 		console.error('Initialization failed:', err);
@@ -105,7 +64,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
 
-	if (!scramjet || !connection) {
+	if (!connection) {
 		error.textContent = "System not initialized yet. Please wait...";
 		return;
 	}
@@ -113,8 +72,6 @@ form.addEventListener("submit", async (event) => {
 	try {
 		if (typeof registerSW !== 'undefined') {
 			await registerSW();
-		} else {
-			console.warn('registerSW function not found, skipping service worker registration');
 		}
 	} catch (err) {
 		error.textContent = "Failed to register service worker.";
@@ -143,8 +100,11 @@ form.addEventListener("submit", async (event) => {
 	
 	try {
 		const currentTransport = await connection.getTransport();
+		console.log('Current transport:', currentTransport);
+		
 		if (currentTransport !== "/proxy/libcurl/index.mjs") {
 			await connection.setTransport("/proxy/libcurl/index.mjs", [{ wisp: wispUrl }]);
+			console.log('Transport set to libcurl with wisp:', wispUrl);
 		}
 	} catch (err) {
 		error.textContent = "Failed to set transport.";
@@ -153,14 +113,24 @@ form.addEventListener("submit", async (event) => {
 		return;
 	}
 
+	// Open in a new tab since we can't use scramjet frames
 	try {
-		const frame = scramjet.createFrame();
-		frame.frame.id = "sj-frame";
-		document.body.appendChild(frame.frame);	
-		frame.go(url);
+		const newWindow = window.open();
+		if (newWindow) {
+			// Try to use BareMux to navigate
+			connection.send(url).then(response => {
+				newWindow.location.href = url;
+			}).catch(err => {
+				console.error('BareMux navigation error:', err);
+				newWindow.location.href = url;
+			});
+		} else {
+			// Fallback if popup is blocked
+			window.location.href = url;
+		}
 	} catch (err) {
-		error.textContent = "Failed to create frame.";
+		error.textContent = "Failed to navigate.";
 		errorCode.textContent = err.toString();
-		console.error('Frame creation error:', err);
+		console.error('Navigation error:', err);
 	}
 });

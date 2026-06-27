@@ -1,7 +1,7 @@
 {
 	"name": "RSOS",
 	"version": "2.0.0",
-	"description": "royal source os host thingy - made by ag, with some help from bestspark687090",
+	"description": "royal source os host thingy - made by ag, with some help from bestspark687090 and Mr.T9",
 	"type": "module",
 	"engines": {
 		"npm": ">=7.0.0",

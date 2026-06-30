@@ -74,10 +74,8 @@ form.addEventListener("submit", async (event) => {
 			await registerSW();
 		}
 	} catch (err) {
-		error.textContent = "Failed to register service worker.";
-		errorCode.textContent = err.toString();
-		console.error('SW registration error:', err);
-		return;
+		console.warn('Service worker registration failed (optional):', err);
+		// Don't return - SW is optional, proxy can work without it
 	}
 
 	let url;
@@ -96,7 +94,7 @@ form.addEventListener("submit", async (event) => {
 		return;
 	}
 
-	let wispUrl = "wss://gointospace.app/wisp/";
+	let wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
 	
 	try {
 		const currentTransport = await connection.getTransport();
@@ -115,16 +113,8 @@ form.addEventListener("submit", async (event) => {
 
 	// Open in a new tab since we can't use scramjet frames
 	try {
-		const newWindow = window.open();
-		if (newWindow) {
-			// Try to use BareMux to navigate
-			connection.send(url).then(response => {
-				newWindow.location.href = url;
-			}).catch(err => {
-				console.error('BareMux navigation error:', err);
-				newWindow.location.href = url;
-			});
-		} else {
+		const newWindow = window.open(url);
+		if (!newWindow) {
 			// Fallback if popup is blocked
 			window.location.href = url;
 		}
